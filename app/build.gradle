@@ -1,0 +1,55 @@
+apply plugin: 'com.android.application'
+apply from: 'tinkerpatch.gradle'
+android {
+    compileSdkVersion 26
+    buildToolsVersion "26.0.2"
+    defaultConfig {
+        applicationId "com.tinkerdemo"
+        minSdkVersion 17
+        targetSdkVersion 26
+        versionCode 10000
+        versionName "1.0.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    signingConfigs {
+        try {
+            config {
+                keyAlias 'yellow_kids'
+                keyPassword 'xhr123456'
+                storeFile file('F:/AndroidProject/yellow_kids.jks')
+                storePassword 'xhr123456'
+            }
+        } catch (ex) {
+            throw new InvalidUserDataException(ex.toString())
+        }
+    }
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources true
+            signingConfig signingConfigs.config
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            debuggable true
+            minifyEnabled false
+            shrinkResources false
+            signingConfig signingConfigs.config
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    compile 'com.android.support:appcompat-v7:26.+'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    provided("com.tinkerpatch.tinker:tinker-android-anno:1.8.0") { changing = true }
+    compile("com.tinkerpatch.sdk:tinkerpatch-android-sdk:1.1.8") { changing = true }
+    compile "com.android.support:multidex:1.0.1"
+    testCompile 'junit:junit:4.12'
+}
